@@ -54,7 +54,6 @@ Dog::Dog (std::string inname) : _name(inname)
 {
 }
 
-// Не забываем чистить память!
 Dog::~Dog()
 {
     for(auto talent : _talents)
@@ -83,7 +82,6 @@ int main()
     std::cin >> DogName;
     Dog dog(DogName);
 
-    // как вариант
     dog.AddTalents(new Swimming);
     dog.AddTalents(new Dancing);
     dog.AddTalents(new Counting);
