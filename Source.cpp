@@ -2,69 +2,93 @@
 #include <string>
 #include <vector>
 
-class Talent {
+class Talent
+{
 public:
-	virtual void show_talents() = 0;
+    virtual ~Talent() = default;
+    virtual std::string Abilities() const = 0;
 };
 
-class Swimming : virtual public Talent {
+class Swimming: public Talent
+{
 public:
-	virtual void show_talents() {
-		std::cout << "It can swim" << std::endl;
-	}
+
+    virtual std::string Abilities() const override
+    {
+        return "Swimm";
+    }
+};
+class Dancing: public Talent
+{
+    virtual std::string Abilities() const override
+    {
+        return "Dance";
+    }
+
 };
 
-class Counting : virtual public Talent {
-public:
-	virtual void show_talents() {
-		std::cout << "It can count" << std::endl;
-	}
+class Counting: public Talent
+{
+    virtual std::string Abilities() const override
+    {
+        return "Count";
+    }
+
 };
 
-class Dancing : virtual public Talent {
+class Dog
+{
 public:
-	virtual void show_talents() {
-		std::cout << "It can dance" << std::endl;
-	}
-};
+    Dog(std::string inname);
+    ~Dog();
 
-class Dog {
+    void AddTalents(Talent *talent);
+    void Show_talents() const;
+
 private:
-	std::string name;
-	std::vector<Talent*> talents;
-public:
-	Dog(std::string _name) {
-		name = _name;
-	}
-	std::string get_name() {
-		return name;
-	}
-	void set_name(std::string _name) {
-		name = _name;
-	}
-	void set_talents() {
-		std::string command = "";
-		std::cout << "Input talents to add them or stop to stop." << std::endl;
-		while (command != "stop") {
-			std::cin >> command;
-			if (command == "swim")
-				talents.push_back(new Swimming());
-			else if (command == "dance")
-				talents.push_back(new Dancing());
-			else if (command == "count")
-				talents.push_back(new Counting());
-		}
-	}
-	void showTal() {
-		std::cout << get_name() << " has some talents:" << std::endl;
-		for (int i = 0; i < talents.size(); i++) {
-			talents[i]->show_talents();
-		}
-	}
+    std::string _name;
+    std::vector <Talent *> _talents;
 };
 
-int main() {
-	Dog d("Steve");
-	d.set_talents();
-	d.showTal();
+Dog::Dog (std::string inname) : _name(inname)
+{
+}
+
+// Не забываем чистить память!
+Dog::~Dog()
+{
+    for(auto talent : _talents)
+    {
+        if (talent != nullptr)
+            delete talent;
+    }
+}
+void Dog::AddTalents(Talent *talent)
+{
+    _talents.push_back(talent);
+}
+
+void Dog::Show_talents() const
+{
+    std::cout << "This is " << _name << " and it has some talents:" << std::endl;;
+
+    for(auto talent : _talents)
+        std::cout << talent->Abilities() << std::endl;
+}
+
+int main()
+{
+    std::string DogName;
+    std::cout << "What is the dog's name: ";
+    std::cin >> DogName;
+    Dog dog(DogName);
+
+    // как вариант
+    dog.AddTalents(new Swimming);
+    dog.AddTalents(new Dancing);
+    dog.AddTalents(new Counting);
+
+    dog.Show_talents();
+
+    return 0;
 }
